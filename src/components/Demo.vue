@@ -49,7 +49,7 @@ export default {
 <style>
 h1,
 .content {
-  margin-left: 20px;
+  margin: 0 20px;
 }
 
 label {

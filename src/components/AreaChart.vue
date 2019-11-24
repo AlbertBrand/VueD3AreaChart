@@ -11,7 +11,7 @@
 <script>
 import * as d3 from "d3";
 
-const AXIS_SIZE = 30;
+const MARGIN = 20;
 
 export default {
   name: "area-chart",
@@ -34,13 +34,13 @@ export default {
       return d3
         .scaleLinear()
         .domain([0, this.data.length - 1])
-        .range([AXIS_SIZE, this.width]);
+        .range([MARGIN, this.width - MARGIN]);
     },
     scaleY() {
       return d3
         .scaleLinear()
         .domain([0, d3.max(this.data)])
-        .range([this.height - AXIS_SIZE, 0]);
+        .range([this.height - MARGIN, MARGIN]);
     },
     points() {
       return this.data.map((d, i) => ({
@@ -48,18 +48,24 @@ export default {
         y: this.scaleY(d)
       }));
     },
-    areaPath() {
+    areaPathFunc() {
       return d3
         .area()
         .x(d => d.x)
         .y0(this.scaleY(0))
-        .y1(d => d.y)(this.points);
+        .y1(d => d.y);
     },
-    linePath() {
+    areaPath() {
+      return this.areaPathFunc(this.points);
+    },
+    linePathFunc() {
       return d3
         .line()
         .x(d => d.x)
-        .y(d => d.y)(this.points);
+        .y(d => d.y);
+    },
+    linePath() {
+      return this.linePathFunc(this.points);
     }
   },
   watch: {
