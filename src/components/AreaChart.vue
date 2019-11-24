@@ -12,6 +12,7 @@
 import * as d3 from "d3";
 
 const MARGIN = 20;
+const ANIMATION_MS = 1000;
 
 export default {
   name: "area-chart",
@@ -29,6 +30,34 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      interpolatedData: this.data.slice()
+    };
+  },
+  methods: {
+    animate(newData, oldData) {
+      const startMs = Date.now();
+      const interpolator = d3.interpolate(oldData, newData);
+      const vm = this;
+      function interpolate() {
+        const frameMs = Date.now();
+        const delta = frameMs - startMs;
+        if (delta < ANIMATION_MS) {
+          // queue next interpolation
+          requestAnimationFrame(interpolate);
+          // update animation state
+          vm.interpolatedData = interpolator(
+            d3.easeCubic(delta / ANIMATION_MS)
+          ).slice();
+        } else {
+          // done
+          vm.interpolatedData = newData;
+        }
+      }
+      interpolate();
+    }
+  },
   computed: {
     scaleX() {
       return d3
@@ -43,7 +72,7 @@ export default {
         .range([this.height - MARGIN, MARGIN]);
     },
     points() {
-      return this.data.map((d, i) => ({
+      return this.interpolatedData.map((d, i) => ({
         x: this.scaleX(i),
         y: this.scaleY(d)
       }));
@@ -69,6 +98,9 @@ export default {
     }
   },
   watch: {
+    data(newData, oldData) {
+      this.animate(newData, oldData);
+    },
     scaleX: {
       handler() {
         const axis = d3.axisBottom().scale(this.scaleX);
