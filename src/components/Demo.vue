@@ -1,7 +1,7 @@
 <template>
   <div class="area-chart">
     <h1>Example Area Chart</h1>
-    <area-chart :data="data" :width="300" :height="300" />
+    <area-chart :data="data" :width="300" :height="300" :max="max" />
     <div class="content">
       <div>
         <label>Record Count: </label>

@@ -12,12 +12,11 @@
 import { interpolate } from "d3-interpolate";
 import { easeCubic } from "d3-ease";
 import { scaleLinear } from "d3-scale";
-import { max } from "d3-array";
 import { area, line } from "d3-shape";
 import { axisBottom, axisLeft } from "d3-axis";
 import { select } from "d3-selection";
 
-const MARGIN = 20;
+const MARGIN = 25;
 const ANIMATION_MS = 1000;
 
 export default {
@@ -26,6 +25,10 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    max: {
+      type: Number,
+      default: 0
     },
     width: {
       type: Number,
@@ -72,8 +75,11 @@ export default {
     },
     scaleY() {
       return scaleLinear()
-        .domain([0, max(this.data)])
+        .domain([0, this.max])
         .range([this.height - MARGIN, MARGIN]);
+    },
+    scales() {
+      return [this.scaleX, this.scaleY];
     },
     points() {
       return this.interpolatedData.map((d, i) => ({
@@ -103,27 +109,21 @@ export default {
     data(newData, oldData) {
       this.animate(newData, oldData);
     },
-    scaleX: {
+    scales: {
       handler() {
-        const axis = axisBottom().scale(this.scaleX);
-        select(".axisBottom").remove();
+        select(".axis")
+          .selectAll("g")
+          .remove();
+
         select(".axis")
           .append("g")
-          .attr("class", "axisBottom")
           .attr("transform", `translate(0,${this.scaleY(0)})`)
-          .call(axis);
-      },
-      immediate: true
-    },
-    scaleY: {
-      handler() {
-        const axis = axisLeft().scale(this.scaleY);
-        select(".axisLeft").remove();
+          .call(axisBottom().scale(this.scaleX));
+
         select(".axis")
           .append("g")
-          .attr("class", "axisLeft")
           .attr("transform", `translate(${this.scaleX(0)},0)`)
-          .call(axis);
+          .call(axisLeft().scale(this.scaleY));
       },
       immediate: true
     }
