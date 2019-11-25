@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:wc": "vue-cli-service build --target wc --name chart-demo-element src/components/Demo.vue",
+    "build:wc": "vue-cli-service build --target wc --name area-chart-element src/components/AreaChart.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

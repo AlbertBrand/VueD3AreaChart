@@ -1,0 +1,21 @@
+<meta charset="utf-8" />
+<title>area-chart-element demo</title>
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.min.js"></script>
+<script src="./area-chart-element.js"></script>
+
+<area-chart-element
+  id="chart"
+  width="400"
+  height="400"
+  max="100"
+></area-chart-element>
+<script>
+  const element = document.getElementById("chart");
+  const setData = () => {
+    element.data = Array.from({ length: 50 }, () =>
+      Math.floor(Math.random() * 100)
+    );
+  };
+  setData();
+  setInterval(setData, 2000);
+</script>
