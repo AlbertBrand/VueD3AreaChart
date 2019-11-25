@@ -4,7 +4,7 @@
       <path class="area" :d="areaPath" />
       <path class="line" :d="linePath" />
     </g>
-    <g class="axis"></g>
+    <g ref="axis"></g>
   </svg>
 </template>
 
@@ -111,16 +111,16 @@ export default {
     },
     scales: {
       handler() {
-        select(".axis")
+        select(this.$refs.axis)
           .selectAll("g")
           .remove();
 
-        select(".axis")
+        select(this.$refs.axis)
           .append("g")
           .attr("transform", `translate(0,${this.scaleY(0)})`)
           .call(axisBottom().scale(this.scaleX));
 
-        select(".axis")
+        select(this.$refs.axis)
           .append("g")
           .attr("transform", `translate(${this.scaleX(0)},0)`)
           .call(axisLeft().scale(this.scaleY));
