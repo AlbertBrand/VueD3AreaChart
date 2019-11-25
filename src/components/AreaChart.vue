@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      dataLength: undefined,
       interpolatedData: this.data.slice()
     };
   },
@@ -70,7 +71,7 @@ export default {
   computed: {
     scaleX() {
       return scaleLinear()
-        .domain([0, this.data.length - 1])
+        .domain([0, this.dataLength])
         .range([MARGIN, this.width - MARGIN]);
     },
     scaleY() {
@@ -107,6 +108,7 @@ export default {
   },
   watch: {
     data(newData, oldData) {
+      this.dataLength = newData.length - 1;
       this.animate(newData, oldData);
     },
     scales: {
