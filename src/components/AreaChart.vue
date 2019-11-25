@@ -9,7 +9,13 @@
 </template>
 
 <script>
-import * as d3 from "d3";
+import { interpolate } from "d3-interpolate";
+import { easeCubic } from "d3-ease";
+import { scaleLinear } from "d3-scale";
+import { max } from "d3-array";
+import { area, line } from "d3-shape";
+import { axisBottom, axisLeft } from "d3-axis";
+import { select } from "d3-selection";
 
 const MARGIN = 20;
 const ANIMATION_MS = 1000;
@@ -38,37 +44,35 @@ export default {
   methods: {
     animate(newData, oldData) {
       const startMs = Date.now();
-      const interpolator = d3.interpolate(oldData, newData);
+      const interpolator = interpolate(oldData, newData);
       const vm = this;
-      function interpolate() {
+      function interpolateFrame() {
         const frameMs = Date.now();
         const delta = frameMs - startMs;
         if (delta < ANIMATION_MS) {
           // queue next interpolation
-          requestAnimationFrame(interpolate);
+          requestAnimationFrame(interpolateFrame);
           // update animation state
           vm.interpolatedData = interpolator(
-            d3.easeCubic(delta / ANIMATION_MS)
+            easeCubic(delta / ANIMATION_MS)
           ).slice();
         } else {
           // done
           vm.interpolatedData = newData;
         }
       }
-      interpolate();
+      interpolateFrame();
     }
   },
   computed: {
     scaleX() {
-      return d3
-        .scaleLinear()
+      return scaleLinear()
         .domain([0, this.data.length - 1])
         .range([MARGIN, this.width - MARGIN]);
     },
     scaleY() {
-      return d3
-        .scaleLinear()
-        .domain([0, d3.max(this.data)])
+      return scaleLinear()
+        .domain([0, max(this.data)])
         .range([this.height - MARGIN, MARGIN]);
     },
     points() {
@@ -78,8 +82,7 @@ export default {
       }));
     },
     areaPathFunc() {
-      return d3
-        .area()
+      return area()
         .x(d => d.x)
         .y0(this.scaleY(0))
         .y1(d => d.y);
@@ -88,8 +91,7 @@ export default {
       return this.areaPathFunc(this.points);
     },
     linePathFunc() {
-      return d3
-        .line()
+      return line()
         .x(d => d.x)
         .y(d => d.y);
     },
@@ -103,9 +105,9 @@ export default {
     },
     scaleX: {
       handler() {
-        const axis = d3.axisBottom().scale(this.scaleX);
-        d3.select(".axisBottom").remove();
-        d3.select(".axis")
+        const axis = axisBottom().scale(this.scaleX);
+        select(".axisBottom").remove();
+        select(".axis")
           .append("g")
           .attr("class", "axisBottom")
           .attr("transform", `translate(0,${this.scaleY(0)})`)
@@ -115,9 +117,9 @@ export default {
     },
     scaleY: {
       handler() {
-        const axis = d3.axisLeft().scale(this.scaleY);
-        d3.select(".axisLeft").remove();
-        d3.select(".axis")
+        const axis = axisLeft().scale(this.scaleY);
+        select(".axisLeft").remove();
+        select(".axis")
           .append("g")
           .attr("class", "axisLeft")
           .attr("transform", `translate(${this.scaleX(0)},0)`)
