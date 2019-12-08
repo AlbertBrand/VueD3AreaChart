@@ -2,6 +2,20 @@
   <div>
     <h1>Example Area Chart</h1>
     <area-chart :data="data" :width="300" :height="300" />
+    <div class="content">
+      <div>
+        <label for="itemCount">Record Count: </label>
+        <input id="itemCount" v-model.number="itemCount" />
+      </div>
+      <div>
+        <label for="min">Min Value: </label>
+        <input id="min" v-model.number="min" />
+      </div>
+      <div>
+        <label for="max">Max Value: </label>
+        <input id="max" v-model.number="max" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,7 +36,10 @@ export default {
   name: "Demo",
   data() {
     return {
-      data: []
+      data: [],
+      itemCount: 25,
+      min: 10,
+      max: 100
     };
   },
   components: {
@@ -31,7 +48,7 @@ export default {
   mounted() {
     interval(
       () => {
-        this.data = generateData(5, 0, 10);
+        this.data = generateData(this.itemCount, this.min, this.max);
       },
       REFRESH_RATE,
       now() - REFRESH_RATE
@@ -40,4 +57,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+label {
+  display: inline-block;
+  width: 150px;
+}
+</style>
