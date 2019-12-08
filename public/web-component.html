@@ -1,0 +1,21 @@
+<meta charset="utf-8" />
+<title>area-chart-element Web component demo</title>
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.min.js"></script>
+<script src="https://unpkg.com/d3-timer@1.0.10/dist/d3-timer.min.js"></script>
+<script src="./area-chart-element.min.js"></script>
+
+<area-chart-element id="chart" width="400" height="400"></area-chart-element>
+
+<script>
+  const element = document.getElementById("chart");
+  const REFRESH_RATE = 2000;
+  d3.interval(
+    () => {
+      element.chartData = Array.from({ length: 25 }, () =>
+        Math.floor(Math.random() * 100)
+      );
+    },
+    REFRESH_RATE,
+    d3.now() - REFRESH_RATE
+  );
+</script>
