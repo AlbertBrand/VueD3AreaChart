@@ -13,16 +13,20 @@
 
 <script>
 import { axisBottom, axisLeft } from "d3-axis";
+import { easeCubic } from "d3-ease";
+import { interpolate } from "d3-interpolate";
 import { scaleLinear } from "d3-scale";
 import { select } from "d3-selection";
 import { area, line } from "d3-shape";
+import { timer } from "d3-timer";
 
 const MARGIN = 25;
+const ANIMATION_MS = 1000;
 
 export default {
   name: "AreaChart",
   props: {
-    data: {
+    chartData: {
       type: Array,
       default: () => []
     },
@@ -58,7 +62,22 @@ export default {
         .y(d => this.scaleY(d));
     }
   },
+  data() {
+    return {
+      data: this.chartData.slice()
+    };
+  },
   watch: {
+    chartData(newData, oldData) {
+      const interpolator = interpolate(oldData, newData);
+      const t = timer(elapsed => {
+        this.data = interpolator(easeCubic(elapsed / ANIMATION_MS)).slice();
+
+        if (elapsed > ANIMATION_MS) {
+          t.stop();
+        }
+      });
+    },
     scaleX() {
       select(this.$refs.axisBottom).call(axisBottom().scale(this.scaleX));
     },
