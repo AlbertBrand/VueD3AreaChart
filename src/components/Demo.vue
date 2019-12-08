@@ -12,11 +12,14 @@ export default {
   name: "Demo",
   data() {
     return {
-      data: [1, 5, 3, 10, 8]
+      data: []
     };
   },
   components: {
     AreaChart
+  },
+  mounted() {
+    this.data = [2, 5, 3, 10, 8];
   }
 };
 </script>

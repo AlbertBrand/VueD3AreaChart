@@ -4,11 +4,17 @@
       <path class="area" :d="areaPath(this.data)" />
       <path class="line" :d="linePath(this.data)" />
     </g>
+    <g>
+      <g ref="axisLeft" :transform="'translate(' + scaleX(0) + ', 0)'"></g>
+      <g ref="axisBottom" :transform="'translate(0, ' + scaleY(0) + ')'"></g>
+    </g>
   </svg>
 </template>
 
 <script>
+import { axisBottom, axisLeft } from "d3-axis";
 import { scaleLinear } from "d3-scale";
+import { select } from "d3-selection";
 import { area, line } from "d3-shape";
 
 const MARGIN = 25;
@@ -50,6 +56,14 @@ export default {
       return line()
         .x((d, i) => this.scaleX(i))
         .y(d => this.scaleY(d));
+    }
+  },
+  watch: {
+    scaleX() {
+      select(this.$refs.axisBottom).call(axisBottom().scale(this.scaleX));
+    },
+    scaleY() {
+      select(this.$refs.axisLeft).call(axisLeft().scale(this.scaleY));
     }
   }
 };
