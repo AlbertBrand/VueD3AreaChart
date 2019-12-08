@@ -1,10 +1,23 @@
 <template>
-  <div>Chart placeholder</div>
+  <div>
+    <h1>Example Area Chart</h1>
+    <area-chart :data="data" :width="300" :height="300" />
+  </div>
 </template>
 
 <script>
+import AreaChart from "./AreaChart";
+
 export default {
-  name: "Demo"
+  name: "Demo",
+  data() {
+    return {
+      data: [1, 5, 3, 10, 8]
+    };
+  },
+  components: {
+    AreaChart
+  }
 };
 </script>
 
