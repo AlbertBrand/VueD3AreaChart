@@ -6,7 +6,17 @@
 </template>
 
 <script>
+import { interval, now } from "d3-timer";
 import AreaChart from "./AreaChart";
+
+const REFRESH_RATE = 2000;
+
+function generateData(size, min, max) {
+  return Array.from(
+    { length: size },
+    () => Math.floor(Math.random() * (max - min + 1)) + min
+  );
+}
 
 export default {
   name: "Demo",
@@ -19,7 +29,13 @@ export default {
     AreaChart
   },
   mounted() {
-    this.data = [2, 5, 3, 10, 8];
+    interval(
+      () => {
+        this.data = generateData(5, 0, 10);
+      },
+      REFRESH_RATE,
+      now() - REFRESH_RATE
+    );
   }
 };
 </script>
