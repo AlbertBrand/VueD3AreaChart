@@ -1,7 +1,6 @@
 {
-  "name": "vue-d3-area-chart",
+  "name": "xebia-webinar-vue-example",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "serve:dist": "serve dist",
