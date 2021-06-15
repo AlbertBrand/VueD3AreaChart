@@ -8,7 +8,8 @@
     "build": "vue-cli-service build",
     "build:wc": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.wc.js vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -47,6 +48,7 @@
     "eslint-plugin-vue": "^7.0.0",
     "prettier": "^2.2.1",
     "typescript": "~4.1.5",
-    "vue-jest": "^5.0.0-0"
+    "vue-jest": "^5.0.0-0",
+    "vue-tsc": "^0.1.7"
   }
 }
