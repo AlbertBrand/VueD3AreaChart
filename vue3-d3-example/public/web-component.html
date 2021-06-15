@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong>
+        We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please
+        enable it to continue.
+      </strong>
+    </noscript>
+    <area-chart id="chart1" width="800" height="600" chart-data="[1,2,5,10]"></area-chart>
+    <area-chart id="chart2" width="400" height="200" chart-data="[2,6,9,10]"></area-chart>
+    <script>
+      const element = document.getElementById('chart1');
+      const REFRESH_RATE = 2000;
+      setInterval(() => {
+        element.chartData = Array.from({ length: 25 }, () => Math.floor(Math.random() * 100));
+      }, REFRESH_RATE);
+    </script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
