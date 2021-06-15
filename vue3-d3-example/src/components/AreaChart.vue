@@ -4,14 +4,20 @@
       <path class="area" :d="areaPath" />
       <path class="line" :d="linePath" />
     </g>
+    <g>
+      <g ref="axisLeftRef" :transform="axisLeftTransform" />
+      <g ref="axisBottomRef" :transform="axisBottomTransform" />
+    </g>
   </svg>
 </template>
 
 <script lang="ts">
+import { axisBottom, axisLeft } from 'd3-axis';
 import { scaleLinear } from 'd3-scale';
 import { max } from 'd3-array';
+import { select } from 'd3-selection';
 import { area, line } from 'd3-shape';
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, onMounted, PropType, Ref, ref, watchEffect } from 'vue';
 
 const MARGIN = 25;
 
@@ -59,11 +65,32 @@ export default defineComponent({
     const areaPath = computed(() => areaPathGenerator.value(props.chartData) ?? '');
     const linePath = computed(() => linePathGenerator.value(props.chartData) ?? '');
 
+    const axisBottomRef: Ref<SVGGElement | undefined> = ref();
+    const axisLeftRef: Ref<SVGGElement | undefined> = ref();
+
+    onMounted(() => {
+      watchEffect(() => {
+        if (!axisBottomRef.value) return;
+        select(axisBottomRef.value).call(axisBottom(scaleX.value));
+      });
+      watchEffect(() => {
+        if (!axisLeftRef.value) return;
+        select(axisLeftRef.value).call(axisLeft(scaleY.value));
+      });
+    });
+
+    const axisBottomTransform = computed(() => `translate(0, ${scaleY.value(0)})`);
+    const axisLeftTransform = computed(() => `translate(${scaleX.value(0)}, 0)`);
+
     return {
       areaPath,
       linePath,
       scaleX,
       scaleY,
+      axisBottomRef,
+      axisLeftRef,
+      axisBottomTransform,
+      axisLeftTransform,
     };
   },
 });
